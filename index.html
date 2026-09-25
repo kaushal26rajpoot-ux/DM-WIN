@@ -1,28 +1,148 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<title>DM WIN</title>
-	<link rel="stylesheet" type="text/css" href="colorGame.css">
-	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DM WIN - Color Trading</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+        body { background: #121212; color: #fff; display: flex; justify-content: center; }
+        .app { width: 100%; max-width: 420px; min-height: 100vh; background: #1e1e1e; padding: 15px; }
+        
+        .header { background: #2a2a2a; padding: 15px; border-radius: 10px; margin-bottom: 15px; }
+        .wallet { font-size: 22px; font-weight: bold; color: #ffeb3b; }
+        
+        .timer-box { background: #242424; padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 15px; }
+        .timer { font-size: 32px; font-weight: bold; color: #00e676; margin-top: 5px; }
+        
+        .btn-group { display: flex; gap: 10px; margin-bottom: 15px; }
+        .trade-btn { flex: 1; padding: 15px 0; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; color: #fff; cursor: pointer; }
+        .btn-green { background: #00c853; }
+        .btn-violet { background: #9c27b0; }
+        .btn-red { background: #d50000; }
+        
+        .numbers { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 15px; }
+        .num-btn { background: #333; border: 1px solid #555; color: #fff; padding: 10px 0; border-radius: 5px; font-weight: bold; }
+
+        .history { background: #2a2a2a; padding: 15px; border-radius: 10px; }
+        .history table { width: 100%; text-align: center; font-size: 14px; }
+        .history th, .history td { padding: 6px 0; border-bottom: 1px solid #333; }
+        .dot { height: 12px; width: 12px; border-radius: 50%; display: inline-block; }
+    </style>
 </head>
 <body>
-	<h1>The Great
-	<br> <span id="colorDisplay">RGB</span> 
-	<br>Color Game</h1>
-	<div id="stripe">
-		<button id="reset">New Colors</button>
-		<span id="message"></span>
-		<button id="easyBtn">Easy</button>
-		<button id="hardBtn">Hard</button>
-	</div>
-	<div id="container">
-		<div class="square"></div>
-		<div class="square"></div>
-	    <div class="square"></div>
-	    <div class="square"></div>
-	    <div class="square"></div>
-	    <div class="square"></div>
-	</div>
-<script type="text/javascript" src="colorGame.js"></script>
+
+<div class="app">
+    <div class="header">
+        <div>Demo Balance</div>
+        <div class="wallet">₹<span id="balance">1000</span></div>
+    </div>
+
+    <div class="timer-box">
+        <div>Period: <span id="period">20260925001</span></div>
+        <div class="timer" id="time">00:30</div>
+    </div>
+
+    <div class="btn-group">
+        <button class="trade-btn btn-green" onclick="placeBet('Green')">Green</button>
+        <button class="trade-btn btn-violet" onclick="placeBet('Violet')">Violet</button>
+        <button class="trade-btn btn-red" onclick="placeBet('Red')">Red</button>
+    </div>
+
+    <div class="numbers">
+        <button class="num-btn">0</button>
+        <button class="num-btn">1</button>
+        <button class="num-btn">2</button>
+        <button class="num-btn">3</button>
+        <button class="num-btn">4</button>
+        <button class="num-btn">5</button>
+        <button class="num-btn">6</button>
+        <button class="num-btn">7</button>
+        <button class="num-btn">8</button>
+        <button class="num-btn">9</button>
+    </div>
+
+    <div class="history">
+        <h4>Game Record</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Period</th>
+                    <th>Number</th>
+                    <th>Result</th>
+                </tr>
+            </thead>
+            <tbody id="historyBody">
+                <!-- Records load here -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    let balance = 1000;
+    let timeLeft = 30;
+    let currentBet = null;
+    let periodCount = 1;
+
+    function updateTimer() {
+        let sec = timeLeft < 10 ? "0" + timeLeft : timeLeft;
+        document.getElementById("time").innerText = "00:" + sec;
+        
+        if (timeLeft === 0) {
+            drawResult();
+            timeLeft = 30;
+        } else {
+            timeLeft--;
+        }
+    }
+
+    function placeBet(color) {
+        if (timeLeft <= 5) {
+            alert("Iss round ka betting time khatam ho chuka hai!");
+            return;
+        }
+        if (balance < 100) {
+            alert("Balance kam hai!");
+            return;
+        }
+        currentBet = color;
+        balance -= 100;
+        document.getElementById("balance").innerText = balance;
+        alert(color + " par ₹100 ki bet lag gayi!");
+    }
+
+    function drawResult() {
+        const colors = ['Green', 'Red', 'Violet'];
+        const randomNum = Math.floor(Math.random() * 10);
+        let resultColor = randomNum % 2 === 0 ? 'Red' : 'Green';
+        if (randomNum === 0 || randomNum === 5) resultColor = 'Violet';
+
+        if (currentBet) {
+            if (currentBet === resultColor) {
+                balance += 200;
+                alert("Aap Jeet Gaye! Result: " + resultColor);
+            } else {
+                alert("Aap Haar Gaye! Result: " + resultColor);
+            }
+            document.getElementById("balance").innerText = balance;
+            currentBet = null;
+        }
+
+        const tbody = document.getElementById("historyBody");
+        const row = `<tr>
+            <td>${document.getElementById("period").innerText}</td>
+            <td>${randomNum}</td>
+            <td><span class="dot" style="background:${resultColor.toLowerCase()}"></span> ${resultColor}</td>
+        </tr>`;
+        tbody.innerHTML = row + tbody.innerHTML;
+
+        periodCount++;
+        document.getElementById("period").innerText = "202609250" + (periodCount < 10 ? "0" + periodCount : periodCount);
+    }
+
+    setInterval(updateTimer, 1000);
+</script>
 
 </body>
 </html>
