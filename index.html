@@ -1,1 +1,606 @@
-              
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>dmwin71</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  body { background: #070e0a; color: #fff; display: flex; justify-content: center; }
+  .app { width: 100%; max-width: 440px; min-height: 100vh; background: linear-gradient(180deg, #091a13 0%, #05120c 40%, #020a06 100%); padding-bottom: 75px; position: relative; }
+  .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; background: rgba(5, 18, 12, 0.95); border-bottom: 1px solid #144431; position: sticky; top: 0; z-index: 50; }
+  .logo { font-size: 20px; font-weight: 900; color: #ffd700; }
+  .wallet-card { background: linear-gradient(135deg, #0c3b28, #165b40); border: 1px solid #23805b; margin: 12px 16px; border-radius: 14px; padding: 16px; }
+  .balance-title { font-size: 12px; color: #8ec3ad; }
+  .balance-val { font-size: 26px; font-weight: bold; color: #ffd700; margin-top: 4px; }
+  .action-btns { display: flex; gap: 10px; margin-top: 14px; }
+  .act-btn { flex: 1; padding: 10px 0; border: none; border-radius: 20px; font-weight: bold; font-size: 13px; cursor: pointer; color: #fff; }
+  .btn-dep { background: linear-gradient(90deg, #10cb74, #0a8f50); }
+  .btn-with { background: #134e38; border: 1px solid #247556; }
+  .cat-bar { display: flex; overflow-x: auto; gap: 8px; padding: 0 16px 12px; }
+  .cat-btn { background: #062419; border: 1px solid #144935; color: #8ec3ad; padding: 8px 14px; border-radius: 18px; font-size: 12px; white-space: nowrap; cursor: pointer; }
+  .cat-btn.active { background: linear-gradient(90deg, #ffd700, #ff9800); color: #000; font-weight: bold; }
+  .view-tab { display: none; }
+  .view-tab.active { display: block; }
+  .modes-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 0 16px 12px; }
+  .mode-pill { background: #072b1e; border: 1px solid #124d36; border-radius: 10px; padding: 10px 2px; text-align: center; font-size: 11px; color: #7cb29d; cursor: pointer; }
+  .mode-pill.active { background: #0db668; color: #fff; font-weight: bold; }
+  .timer-box { background: linear-gradient(135deg, #092c1e, #051a12); border: 1px solid #145940; margin: 0 16px 14px; border-radius: 14px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; }
+  .timer-digits { display: flex; gap: 4px; font-size: 22px; font-weight: bold; }
+  .digit-box { background: #01140e; padding: 4px 7px; border-radius: 6px; border: 1px solid #124c36; }
+  .color-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 0 16px 12px; }
+  .btn-action { border: none; border-radius: 10px; padding: 13px 0; font-size: 15px; font-weight: bold; color: #fff; cursor: pointer; }
+  .bg-green { background: linear-gradient(135deg, #10cb74, #0a8f50); }
+  .bg-violet { background: linear-gradient(135deg, #aa32c0, #7b1fa2); }
+  .bg-red { background: linear-gradient(135deg, #f04444, #c62828); }
+  .balls-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; background: #041810; margin: 0 16px 14px; padding: 14px; border-radius: 14px; border: 1px solid #0f4632; }
+  .ball { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; margin: auto; cursor: pointer; color: #fff; }
+  .ball-red { background: radial-gradient(circle at 35% 35%, #ff6b6b, #d90429); }
+  .ball-green { background: radial-gradient(circle at 35% 35%, #51cf66, #1b8a3e); }
+  .ball-violet-red { background: linear-gradient(135deg, #9c27b0 50%, #d90429 50%); }
+  .ball-violet-green { background: linear-gradient(135deg, #9c27b0 50%, #1b8a3e 50%); }
+  .big-small { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 0 16px 14px; }
+  .btn-bs { border: none; padding: 13px; border-radius: 25px; font-size: 15px; font-weight: bold; color: #fff; cursor: pointer; }
+  .btn-big { background: linear-gradient(135deg, #f59e0b, #d97706); }
+  .btn-small { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+  .history-box { margin: 16px 16px 10px; background: #041a12; border: 1px solid #0f4834; border-radius: 12px; overflow: hidden; }
+  .history-header { display: flex; background: #092c1e; padding: 10px; font-size: 13px; font-weight: bold; color: #ffd700; }
+  .hist-col { flex: 1; text-align: center; }
+  .history-list { max-height: 280px; overflow-y: auto; }
+  .hist-row { display: flex; align-items: center; padding: 9px 10px; border-bottom: 1px solid #082419; font-size: 12px; }
+  .dot-color { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin: 0 2px; }
+  .card-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 0 16px; }
+  .g-card { background: linear-gradient(135deg, #09261a, #04140e); border: 1px solid #144933; border-radius: 12px; padding: 14px; text-align: center; cursor: pointer; }
+  .g-card-icon { font-size: 34px; margin-bottom: 6px; }
+  .g-card-title { font-size: 14px; font-weight: bold; }
+  .g-card-desc { font-size: 11px; color: #8ec3ad; margin-top: 2px; }
+  .dep-page { padding: 0 16px 20px; }
+  .dep-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; margin-bottom: 8px; }
+  .dep-top-bar h3 { color: #f5c443; font-size: 18px; }
+  .dep-bal-card { background: linear-gradient(135deg, #0db668, #087743); border-radius: 14px; padding: 18px; margin-bottom: 14px; }
+  .dep-bal-card .lbl { font-size: 12px; color: #d1fae5; }
+  .dep-bal-card .amt { font-size: 28px; font-weight: bold; margin-top: 4px; }
+  .channel-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
+  .channel-card { background: #06281b; border: 1px solid #124d35; border-radius: 10px; padding: 10px 4px; text-align: center; cursor: pointer; }
+  .channel-card.active { border-color: #ffd700; background: #0c3d2a; }
+  .channel-card .c-icon { font-size: 18px; font-weight: bold; color: #10cb74; margin-bottom: 4px; }
+  .channel-card .c-name { font-size: 10px; color: #a3cfbe; }
+  .dep-box-container { background: #041d14; border: 1px solid #0f4b34; border-radius: 14px; padding: 14px; margin-bottom: 14px; }
+  .dep-amt-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+  .dep-amt-btn { background: #082a1d; border: 1px solid #12553b; color: #ffd700; font-weight: bold; font-size: 13px; padding: 10px 0; border-radius: 8px; text-align: center; cursor: pointer; }
+  .dep-amt-btn.active { background: #0db668; color: #fff; }
+  .dep-input-wrap { display: flex; align-items: center; background: #01110a; border: 1px solid #145940; border-radius: 10px; padding: 10px 14px; }
+  .dep-input-wrap span { color: #ffd700; font-size: 18px; font-weight: bold; margin-right: 8px; }
+  .dep-input-wrap input { flex: 1; background: transparent; border: none; color: #fff; font-size: 15px; outline: none; }
+  .instructions-box { background: #041d14; border: 1px solid #0f4b34; border-radius: 14px; padding: 14px; margin-bottom: 14px; font-size: 12px; color: #8dbba8; line-height: 1.6; }
+  .instructions-box h4 { color: #ffd700; font-size: 13px; margin-bottom: 8px; }
+  .btn-dep-submit { width: 100%; padding: 14px; background: linear-gradient(90deg, #10cb74, #0a8f50); border: none; border-radius: 10px; font-size: 16px; font-weight: bold; color: #fff; cursor: pointer; }
+  .popup-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 3000; padding: 20px; }
+  .win-card { width: 100%; max-width: 340px; background: linear-gradient(180deg, #ff8442 0%, #ff4b2b 45%, #e0281b 100%); border-radius: 24px; padding: 24px 20px 20px; text-align: center; }
+  .badge-icon { width: 75px; height: 75px; margin: -55px auto 10px; background: radial-gradient(circle, #ffe259, #ffa751); border-radius: 50%; border: 4px solid #fff; display: flex; align-items: center; justify-content: center; font-size: 36px; }
+  .win-title { font-size: 24px; font-weight: 900; }
+  .win-results-tag { display: inline-flex; gap: 8px; margin: 12px 0 14px; background: rgba(0,0,0,0.25); padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+  .pill-green { background: #00c853; padding: 2px 8px; border-radius: 12px; }
+  .pill-num { background: #fff; color: #000; padding: 2px 8px; border-radius: 12px; }
+  .pill-big { background: #ff9800; padding: 2px 8px; border-radius: 12px; }
+  .receipt-sheet { background: #fff; color: #333; border-radius: 12px; padding: 14px; }
+  .receipt-bonus-val { font-size: 30px; font-weight: 900; color: #e53935; margin: 2px 0; }
+  .popup-close-x { width: 34px; height: 34px; border: 2px solid #fff; border-radius: 50%; margin: 16px auto 0; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .loss-card { background: linear-gradient(180deg, #37474f 0%, #263238 60%, #1e272c 100%) !important; }
+  .loss-badge { background: radial-gradient(circle, #78909c, #455a64) !important; }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 2500; padding: 16px; }
+  .modal-box { background: #06281b; border: 1px solid #145940; border-radius: 16px; width: 100%; max-width: 380px; padding: 20px; }
+  .qr-frame { background: #fff; padding: 8px; width: 170px; height: 170px; margin: 0 auto 12px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+  .qr-frame img { width: 100%; height: 100%; object-fit: contain; }
+  .input-field { width: 100%; padding: 11px; background: #01140e; border: 1px solid #145940; border-radius: 6px; color: #fff; margin-bottom: 10px; font-size: 13px; }
+  .drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: flex-end; z-index: 1000; }
+  .bet-drawer { background: #09261b; width: 100%; max-width: 440px; border-radius: 20px 20px 0 0; padding: 18px; border-top: 2px solid #ffd700; }
+  .chip-group { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 6px 0 12px; }
+  .chip-mult { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin: 6px 0 14px; }
+  .chip { background: #03150e; border: 1px solid #145940; padding: 8px 0; border-radius: 6px; text-align: center; cursor: pointer; font-size: 13px; font-weight: bold; }
+  .chip.active { background: #ffd700; color: #000; }
+  .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 440px; background: #03140d; border-top: 1px solid #0f4230; display: flex; justify-content: space-around; padding: 10px 0 8px; font-size: 11px; color: #8ec3ad; }
+  .nav-item { text-align: center; cursor: pointer; flex: 1; }
+  .nav-item.active { color: #ffd700; font-weight: bold; }
+</style>
+</head>
+<body>
+  <div class="app">
+  <div class="top-nav">
+    <div class="logo">dmwin71</div>
+    <div style="font-size: 12px; color: #ffd700; background: #072b1e; padding: 4px 10px; border-radius: 12px; border: 1px solid #145940;">👑 VIP</div>
+  </div>
+
+  <div class="wallet-card">
+    <div class="balance-title">Balance</div>
+    <div class="balance-val">₹<span id="walletBal">1000.00</span></div>
+    <div class="action-btns">
+      <button class="act-btn btn-dep" onclick="openDepositView()">+ Deposit</button>
+      <button class="act-btn btn-with" onclick="openModal('withdrawModal')">Withdraw</button>
+    </div>
+  </div>
+
+  <div class="cat-bar" id="categoryBar">
+    <button class="cat-btn active" id="btn-cat-wingo" onclick="switchMainTab('wingoView', this)">🎯 WinGo</button>
+    <button class="cat-btn" id="btn-cat-mini" onclick="switchMainTab('miniView', this)">🚀 Mini Games</button>
+    <button class="cat-btn" id="btn-cat-casino" onclick="switchMainTab('casinoView', this)">🎰 Casino / PVC</button>
+    <button class="cat-btn" id="btn-cat-sports" onclick="switchMainTab('sportsView', this)">⚽ Sports</button>
+  </div>
+
+  <div id="wingoView" class="view-tab active">
+    <div class="modes-grid">
+      <div class="mode-pill active" onclick="changeWingoDuration(30, this)">WinGo<br>30sec</div>
+      <div class="mode-pill" onclick="changeWingoDuration(60, this)">WinGo<br>1 Min</div>
+      <div class="mode-pill" onclick="changeWingoDuration(180, this)">WinGo<br>3 Min</div>
+      <div class="mode-pill" onclick="changeWingoDuration(300, this)">WinGo<br>5 Min</div>
+    </div>
+
+    <div class="timer-box">
+      <div>
+        <div style="font-size: 11px; color: #84b79b;">Period</div>
+        <div id="periodDisplay" style="font-size: 15px; font-weight: bold; color: #ffd700;">202609250001</div>
+      </div>
+      <div>
+        <div style="font-size: 11px; color: #84b79b; text-align: right; margin-bottom: 2px;">Time Remaining</div>
+        <div class="timer-digits">
+          <div class="digit-box" id="min1">0</div>
+          <div class="digit-box" id="min2">0</div>
+          <span>:</span>
+          <div class="digit-box" id="sec1">3</div>
+          <div class="digit-box" id="sec2">0</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="color-actions">
+      <button class="btn-action bg-green" onclick="openBetDrawer('Green', '#10cb74')">Green</button>
+      <button class="btn-action bg-violet" onclick="openBetDrawer('Violet', '#aa32c0')">Violet</button>
+      <button class="btn-action bg-red" onclick="openBetDrawer('Red', '#f04444')">Red</button>
+    </div>
+
+    <div class="balls-grid">
+      <div class="ball ball-violet-red" onclick="openBetDrawer('0', '#aa32c0')">0</div>
+      <div class="ball ball-green" onclick="openBetDrawer('1', '#10cb74')">1</div>
+      <div class="ball ball-red" onclick="openBetDrawer('2', '#f04444')">2</div>
+      <div class="ball ball-green" onclick="openBetDrawer('3', '#10cb74')">3</div>
+      <div class="ball ball-red" onclick="openBetDrawer('4', '#f04444')">4</div>
+      <div class="ball ball-violet-green" onclick="openBetDrawer('5', '#10cb74')">5</div>
+      <div class="ball ball-red" onclick="openBetDrawer('6', '#f04444')">6</div>
+      <div class="ball ball-green" onclick="openBetDrawer('7', '#10cb74')">7</div>
+      <div class="ball ball-red" onclick="openBetDrawer('8', '#f04444')">8</div>
+      <div class="ball ball-green" onclick="openBetDrawer('9', '#10cb74')">9</div>
+    </div>
+
+    <div class="big-small">
+      <button class="btn-bs btn-big" onclick="openBetDrawer('Big', '#f59e0b')">Big</button>
+      <button class="btn-bs btn-small" onclick="openBetDrawer('Small', '#3b82f6')">Small</button>
+    </div>
+
+    <div class="history-box">
+      <div class="history-header">
+        <div class="hist-col">Period</div>
+        <div class="hist-col">Number</div>
+        <div class="hist-col">Big/Small</div>
+        <div class="hist-col">Color</div>
+      </div>
+      <div class="history-list" id="historyList"></div>
+    </div>
+  </div>
+
+  <div id="miniView" class="view-tab">
+    <div class="card-grid">
+      <div class="g-card" onclick="playFastGame('Aviator')"><div class="g-card-icon">🚀</div><div class="g-card-title">Aviator</div><div class="g-card-desc">Crash Multiplier</div></div>
+      <div class="g-card" onclick="playFastGame('Mines')"><div class="g-card-icon">💣</div><div class="g-card-title">Mines</div><div class="g-card-desc">Pick Diamond</div></div>
+      <div class="g-card" onclick="playFastGame('Limbo')"><div class="g-card-icon">🎯</div><div class="g-card-title">Limbo</div><div class="g-card-desc">Target Roll</div></div>
+      <div class="g-card" onclick="playFastGame('Plinko')"><div class="g-card-icon">🔺</div><div class="g-card-title">Plinko</div><div class="g-card-desc">Ball Drop</div></div>
+    </div>
+  </div>
+
+  <div id="casinoView" class="view-tab">
+    <div class="card-grid">
+      <div class="g-card" onclick="playFastGame('Evo Casino')"><div class="g-card-icon">👸</div><div class="g-card-title">Evo Casino</div><div class="g-card-desc">Live Dealer</div></div>
+      <div class="g-card" onclick="playFastGame('V8 Poker')"><div class="g-card-icon">🃏</div><div class="g-card-title">V8 Poker</div><div class="g-card-desc">Texas Cards</div></div>
+    </div>
+  </div>
+
+  <div id="sportsView" class="view-tab">
+    <div class="card-grid">
+      <div class="g-card" onclick="playFastGame('Cricket')"><div class="g-card-icon">🏏</div><div class="g-card-title">Cricket Pro</div><div class="g-card-desc">IPL Odds</div></div>
+      <div class="g-card" onclick="playFastGame('Football')"><div class="g-card-icon">⚽</div><div class="g-card-title">Football AR</div><div class="g-card-desc">Live Match</div></div>
+    </div>
+  </div>
+
+  <div id="depositView" class="view-tab dep-page">
+    <div class="dep-top-bar">
+      <span style="font-size: 20px; cursor: pointer;" onclick="closeDepositView()">←</span>
+      <h3>Deposit</h3>
+      <span style="color:#e5a712; font-size:13px;">Deposit history</span>
+    </div>
+
+    <div class="dep-bal-card">
+      <div class="lbl">Balance</div>
+      <div class="amt">₹<span id="depCardBal">1000.00</span></div>
+    </div>
+
+    <div class="channel-grid">
+      <div class="channel-card active" onclick="selectChannel('UPI-QR', this)"><div class="c-icon">UPI</div><div class="c-name">UPI-QR</div></div>
+      <div class="channel-card" onclick="selectChannel('UPI x QR', this)"><div class="c-icon">UPI</div><div class="c-name">UPI x QR</div></div>
+      <div class="channel-card" onclick="selectChannel('E-Wallet', this)"><div class="c-icon">👛</div><div class="c-name">E-Wallet</div></div>
+      <div class="channel-card" onclick="selectChannel('Paytm x QR', this)"><div class="c-icon">Paytm</div><div class="c-name">Paytm x QR</div></div>
+    </div>
+
+    <div class="dep-box-container">
+      <div style="font-size: 13px; font-weight: bold; color: #ffd700; margin-bottom: 10px;">⚡ Deposit amount</div>
+      <div class="dep-amt-grid">
+        <div class="dep-amt-btn" onclick="setDepAmt(100, this)">₹ 100</div>
+        <div class="dep-amt-btn active" onclick="setDepAmt(500, this)">₹ 500</div>
+        <div class="dep-amt-btn" onclick="setDepAmt(1000, this)">₹ 1K</div>
+        <div class="dep-amt-btn" onclick="setDepAmt(2000, this)">₹ 2K</div>
+        <div class="dep-amt-btn" onclick="setDepAmt(5000, this)">₹ 5K</div>
+        <div class="dep-amt-btn" onclick="setDepAmt(10000, this)">₹ 10K</div>
+      </div>
+      <div class="dep-input-wrap">
+        <span>₹</span>
+        <input type="number" id="customDepInput" value="500">
+      </div>
+    </div>
+
+    <div class="instructions-box">
+      <h4>📖 Recharge instructions</h4>
+      <div>◆ The transfer amount must match the order you created.</div>
+      <div>◆ Fill out the 12-digit UTR correctly to receive instant demo credit.</div>
+    </div>
+
+    <button class="btn-dep-submit" onclick="proceedToPaymentQR()">Deposit</button>
+  </div>
+
+  <div class="bottom-nav">
+    <div class="nav-item active" onclick="switchMainTab('wingoView', document.getElementById('btn-cat-wingo'))">🏠<br>Home</div>
+    <div class="nav-item" onclick="switchMainTab('wingoView', document.getElementById('btn-cat-wingo'))">🎯<br>WinGo</div>
+    <div class="nav-item" onclick="openDepositView()">💳<br>Deposit</div>
+    <div class="nav-item" onclick="openModal('withdrawModal')">👤<br>Account</div>
+  </div>
+</div>
+
+<div class="drawer-overlay" id="betDrawer">
+  <div class="bet-drawer">
+    <div style="text-align: center; font-size: 16px; font-weight: bold; margin-bottom: 12px; color: #ffd700;" id="drawerHeading">Select Target</div>
+    <div style="font-size: 12px; color: #8ec3ad;">Balance</div>
+    <div class="chip-group">
+      <div class="chip active" onclick="pickBase(1, this)">1</div>
+      <div class="chip" onclick="pickBase(10, this)">10</div>
+      <div class="chip" onclick="pickBase(100, this)">100</div>
+      <div class="chip" onclick="pickBase(1000, this)">1000</div>
+    </div>
+    <div style="font-size: 12px; color: #8ec3ad;">Multiplier</div>
+    <div class="chip-mult">
+      <div class="chip active" onclick="pickMult(1, this)">X1</div>
+      <div class="chip" onclick="pickMult(5, this)">X5</div>
+      <div class="chip" onclick="pickMult(10, this)">X10</div>
+      <div class="chip" onclick="pickMult(20, this)">X20</div>
+      <div class="chip" onclick="pickMult(50, this)">X50</div>
+      <div class="chip" onclick="pickMult(100, this)">X100</div>
+    </div>
+    <div style="display: flex; gap: 10px; margin-top: 14px;">
+      <button style="flex: 1; padding: 12px; background: #03150e; border: 1px solid #444; color: #aaa; border-radius: 8px;" onclick="closeDrawer()">Cancel</button>
+      <button style="flex: 2; padding: 12px; background: linear-gradient(90deg, #ffd700, #ff9800); border: none; color: #000; font-weight: bold; border-radius: 8px;" onclick="confirmBet()">Confirm ₹<span id="totBetDisp">1</span></button>
+    </div>
+  </div>
+</div>
+
+<div class="popup-overlay" id="winPopup">
+  <div class="win-card">
+    <div class="badge-icon">🚀</div>
+    <div class="win-title">Congratulations</div>
+    <div class="win-results-tag">
+      <span>Lottery results</span>
+      <span class="pill-green" id="winResColor">Green</span>
+      <span class="pill-num" id="winResNum">9</span>
+      <span class="pill-big" id="winResSize">Big</span>
+    </div>
+    <div class="receipt-sheet">
+      <div style="font-size: 13px; color: #888; font-weight: bold;">Bonus</div>
+      <div class="receipt-bonus-val">+₹<span id="winAmountVal">725.20</span></div>
+      <div style="font-size: 11px; color: #999;">Period: WinGo <span id="winPeriodVal">202609250001</span></div>
+    </div>
+    <div style="font-size: 12px; color: #ffe6d6; margin-top: 14px;"><span id="winTimerCountdown">5</span> seconds auto close</div>
+    <div class="popup-close-x" onclick="closePopup('winPopup')">✕</div>
+  </div>
+</div>
+
+<div class="popup-overlay" id="lossPopup">
+  <div class="win-card loss-card">
+    <div class="badge-icon loss-badge">😢</div>
+    <div class="win-title" style="color: #cfd8dc;">Hard Luck!</div>
+    <div class="win-results-tag">
+      <span>Lottery results</span>
+      <span class="pill-green" id="lossResColor">Red</span>
+      <span class="pill-num" id="lossResNum">2</span>
+      <span class="pill-big" id="lossResSize">Small</span>
+    </div>
+    <div class="receipt-sheet">
+      <div style="font-size: 13px; color: #888; font-weight: bold;">Round Result</div>
+      <div class="receipt-bonus-val" style="color: #546e7a;">-₹<span id="lossAmountVal">100.00</span></div>
+      <div style="font-size: 11px; color: #999;">Better luck next round!</div>
+    </div>
+    <div style="font-size: 12px; color: #ffe6d6; margin-top: 14px;"><span id="lossTimerCountdown">5</span> seconds auto close</div>
+    <div class="popup-close-x" onclick="closePopup('lossPopup')">✕</div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="payQrModal">
+  <div class="modal-box">
+    <h3 style="color: #ffd700; text-align: center; margin-bottom: 10px;">Scan & Pay</h3>
+    <div class="qr-frame">
+      <img src="qr.jpg" alt="UPI QR" onerror="this.onerror=null; this.src='https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=dmwin71@upi';">
+    </div>
+    <p style="text-align: center; font-size: 14px; margin-bottom: 12px;">Amount: <b style="color:#ffd700;">₹<span id="payModalAmt">500</span></b></p>
+    <input type="text" id="payUtrInput" class="input-field" placeholder="Enter 12-Digit UTR Number">
+    <button class="btn-dep-submit" onclick="confirmPaymentAndCredit()">Submit UTR</button>
+    <button style="width: 100%; padding: 8px; background: transparent; border: 1px solid #444; border-radius: 8px; color: #aaa; margin-top: 8px;" onclick="closeModal('payQrModal')">Cancel</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="withdrawModal">
+  <div class="modal-box">
+    <h3 style="color: #ffd700; text-align: center; margin-bottom: 12px;">Withdraw</h3>
+    <input type="number" id="withAmt" class="input-field" placeholder="Enter Amount (₹)">
+    <input type="text" id="withAcc" class="input-field" placeholder="Bank Account Number or UPI ID">
+    <button style="width: 100%; padding: 12px; background: linear-gradient(90deg, #ffd700, #ff9800); border: none; border-radius: 8px; font-weight: bold; color: #000;" onclick="doWithdraw()">Submit</button>
+    <button style="width: 100%; padding: 8px; background: transparent; border: 1px solid #444; border-radius: 8px; color: #aaa; margin-top: 8px;" onclick="closeModal('withdrawModal')">Close</button>
+  </div>
+</div>
+
+<script>
+  let balance = 1000.00;
+  let wingoDuration = 30;
+  let wingoTimer = 30;
+  let currentPeriod = 202609250001;
+  let activeBets = [];
+  let selTarget = null;
+  let baseChip = 1;
+  let multChip = 1;
+  let currentChannel = 'UPI-QR';
+
+  function updateBalanceAll() {
+    document.getElementById('walletBal').innerText = balance.toFixed(2);
+    document.getElementById('depCardBal').innerText = balance.toFixed(2);
+  }
+
+  function switchMainTab(viewId, btnEl) {
+    document.querySelectorAll('.view-tab').forEach(v => v.classList.remove('active'));
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('categoryBar').style.display = 'flex';
+    document.getElementById(viewId).classList.add('active');
+    if (btnEl) btnEl.classList.add('active');
+  }
+
+  function openDepositView() {
+    document.querySelectorAll('.view-tab').forEach(v => v.classList.remove('active'));
+    document.getElementById('categoryBar').style.display = 'none';
+    document.getElementById('depositView').classList.add('active');
+    updateBalanceAll();
+  }
+
+  function closeDepositView() {
+    switchMainTab('wingoView', document.getElementById('btn-cat-wingo'));
+  }
+
+  function selectChannel(name, el) {
+    currentChannel = name;
+    el.parentNode.querySelectorAll('.channel-card').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function setDepAmt(val, el) {
+    document.getElementById('customDepInput').value = val;
+    el.parentNode.querySelectorAll('.dep-amt-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function proceedToPaymentQR() {
+    let amt = parseFloat(document.getElementById('customDepInput').value);
+    if (!amt || amt < 100) { alert("Minimum deposit amount is ₹100!"); return; }
+    document.getElementById('payModalAmt').innerText = amt;
+    openModal('payQrModal');
+  }
+
+  function confirmPaymentAndCredit() {
+    let amt = parseFloat(document.getElementById('customDepInput').value);
+    let utr = document.getElementById('payUtrInput').value.trim();
+    if (utr.length < 4) { alert("Please enter valid 12-digit UTR Number!"); return; }
+    balance += amt;
+    updateBalanceAll();
+    closeModal('payQrModal');
+    alert(`Success: ₹${amt} deposited!`);
+    document.getElementById('payUtrInput').value = '';
+    closeDepositView();
+  }
+
+  setInterval(() => {
+    if (wingoTimer <= 0) {
+      drawRoundResult();
+      wingoTimer = wingoDuration;
+      currentPeriod++;
+      document.getElementById('periodDisplay').innerText = currentPeriod;
+    } else {
+      wingoTimer--;
+    }
+    updateTimerUI();
+  }, 1000);
+
+  function updateTimerUI() {
+    let m = Math.floor(wingoTimer / 60);
+    let s = wingoTimer % 60;
+    let sm = m < 10 ? '0' + m : '' + m;
+    let ss = s < 10 ? '0' + s : '' + s;
+    document.getElementById('min1').innerText = sm[0];
+    document.getElementById('min2').innerText = sm[1];
+    document.getElementById('sec1').innerText = ss[0];
+    document.getElementById('sec2').innerText = ss[1];
+  }
+
+  function changeWingoDuration(dur, el) {
+    document.querySelectorAll('.mode-pill').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    wingoDuration = dur;
+    wingoTimer = dur;
+    updateTimerUI();
+  }
+
+  function openBetDrawer(target, colorCode) {
+    if (wingoTimer <= 5) { alert("Betting locked in last 5 seconds!"); return; }
+    selTarget = target;
+    const heading = document.getElementById('drawerHeading');
+    heading.innerText = `WinGo ${wingoDuration}s: Select ${target}`;
+    heading.style.color = colorCode;
+    updateTotalBet();
+    document.getElementById('betDrawer').style.display = 'flex';
+  }
+
+  function closeDrawer() { document.getElementById('betDrawer').style.display = 'none'; }
+  function pickBase(val, el) {
+    baseChip = val;
+    el.parentNode.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    updateTotalBet();
+  }
+  function pickMult(val, el) {
+    multChip = val;
+    el.parentNode.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    updateTotalBet();
+  }
+  function updateTotalBet() {
+    document.getElementById('totBetDisp').innerText = (baseChip * multChip);
+  }
+  function confirmBet() {
+    let tot = baseChip * multChip;
+    if (balance < tot) { alert("Insufficient Balance!"); return; }
+    balance -= tot;
+    updateBalanceAll();
+    activeBets.push({ target: selTarget, amount: tot });
+    closeDrawer();
+  }
+
+  let popupAutoCloseTimer = null;
+
+  function drawRoundResult() {
+    const outcome = Math.floor(Math.random() * 10);
+    let outColor = (outcome % 2 === 0) ? 'Red' : 'Green';
+    if (outcome === 0 || outcome === 5) outColor = 'Violet';
+    let outSize = outcome >= 5 ? 'Big' : 'Small';
+
+    addHistoryRow(currentPeriod, outcome, outSize, outColor);
+
+    if (activeBets.length > 0) {
+      let won = 0;
+      let lost = 0;
+      activeBets.forEach(b => {
+        let isHit = false;
+        if (b.target == outcome) { won += b.amount * 9; isHit = true; }
+        else if (b.target === outColor) { won += b.amount * 2; isHit = true; }
+        else if (b.target === outSize) { won += b.amount * 2; isHit = true; }
+        if (!isHit) lost += b.amount;
+      });
+
+      if (won > 0) {
+        balance += won;
+        showWinPopup(won, outcome, outColor, outSize);
+      } else {
+        showLossPopup(lost, outcome, outColor, outSize);
+      }
+      updateBalanceAll();
+      activeBets = [];
+    }
+  }
+
+  function addHistoryRow(period, num, size, color) {
+    const list = document.getElementById('historyList');
+    const row = document.createElement('div');
+    row.className = 'hist-row';
+    let colorDot = (color === 'Violet') 
+      ? '<span class="dot-color" style="background:#9c27b0;"></span><span class="dot-color" style="background:#d90429;"></span>' 
+      : `<span class="dot-color" style="background:${color === 'Green' ? '#00c853' : '#d50000'};"></span>`;
+
+    row.innerHTML = `
+      <div class="hist-col" style="color:#aaa;">${period}</div>
+      <div class="hist-col" style="font-weight:bold; color:${color === 'Green' ? '#00e676' : '#ff5252'}; font-size:15px;">${num}</div>
+      <div class="hist-col">${size}</div>
+      <div class="hist-col">${colorDot}</div>
+    `;
+    list.prepend(row);
+  }
+
+  addHistoryRow(2026092500050227, 5, 'Big', 'Violet'
+                );
+  addHistoryRow(2026092500050226, 4, 'Small', 'Red');
+  addHistoryRow(2026092500050225, 0, 'Small', 'Violet');
+
+  function showWinPopup(amt, num, color, size) {
+    document.getElementById('winAmountVal').innerText = amt.toFixed(2);
+    document.getElementById('winPeriodVal').innerText = currentPeriod;
+    document.getElementById('winResNum').innerText = num;
+    document.getElementById('winResColor').innerText = color;
+    document.getElementById('winResSize').innerText = size;
+    document.getElementById('winPopup').style.display = 'flex';
+    startAutoClose('winPopup', 'winTimerCountdown');
+  }
+
+  function showLossPopup(amt, num, color, size) {
+    document.getElementById('lossAmountVal').innerText = amt.toFixed(2);
+    document.getElementById('lossResNum').innerText = num;
+    document.getElementById('lossResColor').innerText = color;
+    document.getElementById('lossResSize').innerText = size;
+    document.getElementById('lossPopup').style.display = 'flex';
+    startAutoClose('lossPopup', 'lossTimerCountdown');
+  }
+
+  function startAutoClose(popupId, countdownSpanId) {
+    let sec = 5;
+    document.getElementById(countdownSpanId).innerText = sec;
+    clearInterval(popupAutoCloseTimer);
+    popupAutoCloseTimer = setInterval(() => {
+      sec--;
+      if (document.getElementById(countdownSpanId)) {
+        document.getElementById(countdownSpanId).innerText = sec;
+      }
+      if (sec <= 0) {
+        clearInterval(popupAutoCloseTimer);
+        closePopup(popupId);
+      }
+    }, 1000);
+  }
+
+  function closePopup(id) {
+    clearInterval(popupAutoCloseTimer);
+    document.getElementById(id).style.display = 'none';
+  }
+
+  function playFastGame(name) {
+    if (balance < 50) { alert("Balance low!"); return; }
+    balance -= 50;
+    let win = Math.random() > 0.48;
+    if (win) {
+      balance += 100;
+      showWinPopup(100, 7, 'Green', 'Big');
+    } else {
+      showLossPopup(50, 2, 'Red', 'Small');
+    }
+    updateBalanceAll();
+  }
+
+  function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+  function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+  function doWithdraw() {
+    let a = parseFloat(document.getElementById('withAmt').value);
+    if (!a || a <= 0 || a > balance) { alert("Invalid amount or balance low!"); return; }
+    balance -= a;
+    updateBalanceAll();
+    closeModal('withdrawModal');
+    alert(`Success: ₹${a} withdraw request submitted!`);
+  }
+</script>
+</body>
+</html>
+
