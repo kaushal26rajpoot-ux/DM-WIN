@@ -9,7 +9,7 @@
   body { background: #040d08; color: #fff; display: flex; justify-content: center; }
   .app { width: 100%; max-width: 440px; min-height: 100vh; background: linear-gradient(180deg, #091f15 0%, #05140d 40%, #020a06 100%); padding-bottom: 75px; position: relative; }
 
-  /* Auth Screen */
+  /* Auth Overlay */
   .auth-overlay { position: fixed; inset: 0; background: #03120b; z-index: 5000; display: flex; justify-content: center; align-items: center; padding: 20px; }
   .auth-card { background: #08281b; border: 1px solid #1a6f4e; border-radius: 16px; width: 100%; max-width: 380px; padding: 22px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
   .auth-logo { text-align: center; font-size: 26px; font-weight: 900; color: #ffd700; margin-bottom: 6px; }
@@ -23,7 +23,7 @@
 
   /* Top Bar */
   .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; background: rgba(5, 18, 12, 0.95); border-bottom: 1px solid #144431; position: sticky; top: 0; z-index: 50; }
-  .logo { font-size: 20px; font-weight: 900; color: #ffd700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
+  .logo { font-size: 20px; font-weight: 900; color: #ffd700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.3); cursor: pointer; }
 
   /* Wallet Card */
   .wallet-card { background: linear-gradient(135deg, #0c3b28, #165b40); border: 1px solid #23805b; margin: 12px 16px; border-radius: 14px; padding: 16px; box-shadow: 0 4px 18px rgba(0,0,0,0.4); }
@@ -40,28 +40,37 @@
   .cat-btn { background: #062419; border: 1px solid #144935; color: #8ec3ad; padding: 8px 14px; border-radius: 18px; font-size: 12px; white-space: nowrap; cursor: pointer; }
   .cat-btn.active { background: linear-gradient(90deg, #ffd700, #ff9800); color: #000; font-weight: bold; border-color: #ffd700; }
 
-  /* Views */
+  /* Views Management */
   .view-tab { display: none; }
   .view-tab.active { display: block; }
 
-  /* Modes Grid */
+  /* Home View Lobby */
+  .home-banner { background: linear-gradient(135deg, #0a3824, #041b11); border: 1px solid #145940; margin: 0 16px 14px; border-radius: 14px; padding: 16px; }
+  .home-banner h3 { color: #ffd700; font-size: 17px; margin-bottom: 4px; }
+  .home-banner p { font-size: 12px; color: #9ed2bd; }
+
+  .lobby-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 0 16px; }
+  .lobby-card { background: linear-gradient(135deg, #072e1e, #03170e); border: 1px solid #12553b; border-radius: 14px; padding: 16px; text-align: center; cursor: pointer; }
+  .lobby-icon { font-size: 38px; margin-bottom: 8px; }
+  .lobby-title { font-size: 15px; font-weight: bold; color: #fff; }
+  .lobby-desc { font-size: 11px; color: #7cb29d; margin-top: 4px; }
+
+  /* WinGo UI Elements */
+  .back-btn-wrap { display: flex; align-items: center; gap: 8px; margin: 0 16px 10px; cursor: pointer; font-size: 14px; color: #ffd700; }
   .modes-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 0 16px 12px; }
   .mode-pill { background: #072b1e; border: 1px solid #124d36; border-radius: 10px; padding: 10px 2px; text-align: center; font-size: 11px; color: #7cb29d; cursor: pointer; }
   .mode-pill.active { background: #0db668; color: #fff; font-weight: bold; border-color: #0db668; }
 
-  /* Timer Box */
   .timer-box { background: linear-gradient(135deg, #092c1e, #051a12); border: 1px solid #145940; margin: 0 16px 14px; border-radius: 14px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; }
   .timer-digits { display: flex; gap: 4px; font-size: 22px; font-weight: bold; color: #fff; }
   .digit-box { background: #01140e; padding: 4px 7px; border-radius: 6px; border: 1px solid #124c36; }
 
-  /* Color Buttons */
   .color-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 0 16px 12px; }
   .btn-action { border: none; border-radius: 10px; padding: 13px 0; font-size: 15px; font-weight: bold; color: #fff; cursor: pointer; }
   .bg-green { background: linear-gradient(135deg, #10cb74, #0a8f50); }
   .bg-violet { background: linear-gradient(135deg, #aa32c0, #7b1fa2); }
   .bg-red { background: linear-gradient(135deg, #f04444, #c62828); }
 
-  /* Balls Grid */
   .balls-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; background: #041810; margin: 0 16px 14px; padding: 14px; border-radius: 14px; border: 1px solid #0f4632; }
   .ball { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; margin: auto; cursor: pointer; color: #fff; }
   .ball-red { background: radial-gradient(circle at 35% 35%, #ff6b6b, #d90429); }
@@ -74,7 +83,6 @@
   .btn-big { background: linear-gradient(135deg, #f59e0b, #d97706); }
   .btn-small { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
 
-  /* History Table */
   .history-box { margin: 16px 16px 10px; background: #041a12; border: 1px solid #0f4834; border-radius: 12px; overflow: hidden; }
   .history-header { display: flex; background: #092c1e; padding: 10px; font-size: 13px; font-weight: bold; color: #ffd700; }
   .hist-col { flex: 1; text-align: center; }
@@ -82,14 +90,7 @@
   .hist-row { display: flex; align-items: center; padding: 9px 10px; border-bottom: 1px solid #082419; font-size: 12px; }
   .dot-color { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin: 0 2px; }
 
-  /* Other Games Grid */
-  .card-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 0 16px; }
-  .g-card { background: linear-gradient(135deg, #09261a, #04140e); border: 1px solid #144933; border-radius: 12px; padding: 14px; text-align: center; cursor: pointer; }
-  .g-card-icon { font-size: 34px; margin-bottom: 6px; }
-  .g-card-title { font-size: 14px; font-weight: bold; color: #fff; }
-  .g-card-desc { font-size: 11px; color: #8ec3ad; margin-top: 2px; }
-
-  /* Boom Mines Overlay */
+  /* Boom Mines Overlay Screen */
   .game-overlay { position: fixed; inset: 0; background: #04120a; z-index: 2800; display: none; flex-direction: column; }
   .game-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; background: #07261a; border-bottom: 1px solid #145940; }
   .game-title { font-size: 16px; font-weight: bold; color: #ffd700; }
@@ -97,7 +98,7 @@
   .mine-cell { aspect-ratio: 1; background: #093726; border: 1px solid #196f4e; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; }
   .mine-cell.revealed { background: #031c13; }
 
-  /* Deposit Page */
+  /* Deposit Styles */
   .dep-page { padding: 0 16px 20px; }
   .dep-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; margin-bottom: 8px; }
   .dep-top-bar h3 { color: #f5c443; font-size: 18px; }
@@ -130,7 +131,7 @@
   .dep-hist-card { background: #06281b; border: 1px solid #124d35; border-radius: 12px; padding: 12px 14px; margin-bottom: 16px; }
   .dep-hist-row { display: flex; justify-content: space-between; font-size: 12px; color: #8ec3ad; margin-bottom: 6px; }
   .dep-hist-row .val { color: #fff; font-weight: bold; }
-  .btn-dep-submit { width: 100%; padding: 14px; background: linear-gradient(90deg, #10cb74, #0a8f50); border: none; border-radius: 10px; font-size: 16px; font-weight: bold; color: #fff; cursor: pointer; box-shadow: 0 4px 12px rgba(16,203,116,0.3); }
+  .btn-dep-submit { width: 100%; padding: 14px; background: linear-gradient(90deg, #10cb74, #0a8f50); border: none; border-radius: 10px; font-size: 16px; font-weight: bold; color: #fff; cursor: pointer; }
 
   /* Win / Loss Popups */
   .popup-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 3000; padding: 20px; }
@@ -171,7 +172,7 @@
 </style>
 </head>
 <body>
-<!-- AUTH SCREEN (LOGIN & REGISTER) -->
+ <!-- AUTH SCREEN (LOGIN & REGISTER) -->
 <div class="auth-overlay" id="authScreen">
   <div class="auth-card">
     <div class="auth-logo">Dm Win</div>
@@ -202,7 +203,7 @@
 <div class="app">
   <!-- Top Bar -->
   <div class="top-nav">
-    <div class="logo">Dm Win</div>
+    <div class="logo" onclick="openHomeLobby()">Dm Win</div>
     <div style="font-size: 12px; color: #ffd700; display: flex; align-items: center; gap: 6px;">
       <span id="userPhoneDisplay">VIP User</span>
       <button onclick="handleLogout()" style="background:#072b1e; border:1px solid #145940; color:#fff; padding:3px 7px; border-radius:10px; font-size:10px; cursor:pointer;">Logout</button>
@@ -221,14 +222,49 @@
 
   <!-- Category Nav Pills -->
   <div class="cat-bar" id="categoryBar">
-    <button class="cat-btn active" id="btn-cat-wingo" onclick="switchMainTab('wingoView', this)">🎯 WinGo</button>
-    <button class="cat-btn" id="btn-cat-mini" onclick="switchMainTab('miniView', this)">🚀 Mini Games</button>
-    <button class="cat-btn" id="btn-cat-casino" onclick="switchMainTab('casinoView', this)">🎰 Casino / PVC</button>
-    <button class="cat-btn" id="btn-cat-sports" onclick="switchMainTab('sportsView', this)">⚽ Sports</button>
+    <button class="cat-btn active" id="btn-cat-home" onclick="openHomeLobby()">🔥 Home Lobby</button>
+    <button class="cat-btn" id="btn-cat-wingo" onclick="openWingoGame()">🎯 WinGo</button>
+    <button class="cat-btn" id="btn-cat-mini" onclick="openInteractiveBoom()">💣 Boom Mines</button>
+    <button class="cat-btn" id="btn-cat-dep" onclick="openDepositView()">💳 Deposit</button>
   </div>
 
-  <!-- TAB 1: WINGO LOTTERY -->
-  <div id="wingoView" class="view-tab active">
+  <!-- VIEW 1: HOME LOBBY (DEFAULT OPEN SCREEN) -->
+  <div id="homeView" class="view-tab active">
+    <div class="home-banner">
+      <h3>Official Game Lobby</h3>
+      <p>Select any game below to start playing with live multipliers & color prediction.</p>
+    </div>
+
+    <div class="lobby-grid">
+      <div class="lobby-card" onclick="openWingoGame()">
+        <div class="lobby-icon">🎯</div>
+        <div class="lobby-title">WinGo Lottery</div>
+        <div class="lobby-desc">30s, 1m, 3m, 5m</div>
+      </div>
+      <div class="lobby-card" onclick="openInteractiveBoom()">
+        <div class="lobby-icon">💣</div>
+        <div class="lobby-title">Boom Mines (5x5)</div>
+        <div class="lobby-desc">Pick 💎 Diamonds</div>
+      </div>
+      <div class="lobby-card" onclick="playFastGame('Aviator')">
+        <div class="lobby-icon">🚀</div>
+        <div class="lobby-title">Aviator</div>
+        <div class="lobby-desc">Crash Multiplier</div>
+      </div>
+      <div class="lobby-card" onclick="playFastGame('Evo Casino')">
+        <div class="lobby-icon">👸</div>
+        <div class="lobby-title">Casino Live</div>
+        <div class="lobby-desc">Roulette & Cards</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW 2: WINGO LOTTERY (OPENS ON CLICK) -->
+  <div id="wingoView" class="view-tab">
+    <div class="back-btn-wrap" onclick="openHomeLobby()">
+      <span>← Back to Home Lobby</span>
+    </div>
+
     <div class="modes-grid">
       <div class="mode-pill active" onclick="changeWingoDuration(30, this)">WinGo<br>30sec</div>
       <div class="mode-pill" onclick="changeWingoDuration(60, this)">WinGo<br>1 Min</div>
@@ -287,35 +323,10 @@
       <div class="history-list" id="historyList"></div>
     </div>
   </div>
-
-  <!-- TAB 2: MINI GAMES -->
-  <div id="miniView" class="view-tab">
-    <div class="card-grid">
-      <div class="g-card" onclick="openInteractiveBoom()"><div class="g-card-icon">💣</div><div class="g-card-title">Boom Mines</div><div class="g-card-desc">Click & Open Screen</div></div>
-      <div class="g-card" onclick="playFastGame('Aviator')"><div class="g-card-icon">🚀</div><div class="g-card-title">Aviator</div><div class="g-card-desc">Crash Multiplier</div></div>
-      <div class="g-card" onclick="playFastGame('Limbo')"><div class="g-card-icon">🎯</div><div class="g-card-title">Limbo</div><div class="g-card-desc">Target Roll</div></div>
-      <div class="g-card" onclick="playFastGame('Plinko')"><div class="g-card-icon">🔺</div><div class="g-card-title">Plinko</div><div class="g-card-desc">Ball Drop</div></div>
-    </div>
-  </div>
-
-  <!-- TAB 3: CASINO -->
-  <div id="casinoView" class="view-tab">
-    <div class="card-grid">
-      <div class="g-card" onclick="playFastGame('Evo Casino')"><div class="g-card-icon">👸</div><div class="g-card-title">Evo Casino</div><div class="g-card-desc">Live Dealer</div></div>
-      <div class="g-card" onclick="playFastGame('V8 Poker')"><div class="g-card-icon">🃏</div><div class="g-card-title">V8 Poker</div><div class="g-card-desc">Texas Cards</div></div>
-    </div>
-  </div>
-
-  <!-- TAB 4: SPORTS -->
-  <div id="sportsView" class="view-tab">
-    <div class="card-grid">
-      <div class="g-card" onclick="playFastGame('Cricket')"><div class="g-card-icon">🏏</div><div class="g-card-title">Cricket Pro</div><div class="g-card-desc">IPL Odds</div></div>
-      <div class="g-card" onclick="playFastGame('Football')"><div class="g-card-icon">⚽</div><div class="g-card-title">Football AR</div><div class="g-card-desc">Live Match</div></div>
-    </div>
-  <!-- TAB 5: DEPOSIT VIEW -->
+    <!-- VIEW 3: DEPOSIT VIEW -->
   <div id="depositView" class="view-tab dep-page">
     <div class="dep-top-bar">
-      <span style="font-size: 20px; cursor: pointer;" onclick="closeDepositView()">←</span>
+      <span style="font-size: 20px; cursor: pointer;" onclick="openHomeLobby()">←</span>
       <h3>Deposit</h3>
       <span class="dep-hist-link">Deposit history</span>
     </div>
@@ -376,9 +387,9 @@
 
   <!-- Bottom Navigation -->
   <div class="bottom-nav">
-    <div class="nav-item active" onclick="switchMainTab('wingoView', document.getElementById('btn-cat-wingo'))">🏠<br>Home</div>
-    <div class="nav-item" onclick="switchMainTab('wingoView', document.getElementById('btn-cat-wingo'))">🎯<br>WinGo</div>
-    <div class="nav-item" onclick="openDepositView()">💳<br>Deposit</div>
+    <div class="nav-item active" id="navHome" onclick="openHomeLobby()">🏠<br>Home</div>
+    <div class="nav-item" id="navWingo" onclick="openWingoGame()">🎯<br>WinGo</div>
+    <div class="nav-item" id="navDeposit" onclick="openDepositView()">💳<br>Deposit</div>
     <div class="nav-item" onclick="openModal('withdrawModal')">👤<br>Account</div>
   </div>
 </div>
@@ -473,10 +484,10 @@
     <div class="qr-frame">
       <img src="qr.jpg" alt="UPI QR" onerror="this.onerror=null; this.src='https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=dmwin71@upi';">
     </div>
-    <p style="text-align: center; font-size: 14px; margin-bottom: 12px;">Amount to Pay: <b style="color:#ffd700;">₹<span id="payModalAmt">500</span></b></p>
+    <p style="text-align: center; font-size: 14px; color: #fff; margin-bottom: 12px;">Amount to Pay: <b style="color:#ffd700;">₹<span id="payModalAmt">500</span></b></p>
     <input type="text" id="payUtrInput" class="input-field" placeholder="Enter 12-Digit UTR Number">
     <button class="btn-dep-submit" onclick="confirmPaymentAndCredit()">Submit UTR</button>
-    <button style="width: 100%; padding: 8px; background: transparent; border: 1px solid #444; border-radius: 8px; color: #aaa; margin-top: 8px; cursor: pointer;" onclick="closeModal('payQrModal')">Cancel</button>
+    <button style="width: 100%; padding: 8px; background: transparent; border: 1px solid #444; border-radius: 8px; color: #aaa; margin-top: 8px;" onclick="closeModal('payQrModal')">Cancel</button>
   </div>
 </div>
 
@@ -487,12 +498,11 @@
     <input type="number" id="withAmt" class="input-field" placeholder="Enter Amount (₹)">
     <input type="text" id="withName" class="input-field" placeholder="Account Holder Name">
     <input type="text" id="withAcc" class="input-field" placeholder="Bank Account Number or UPI ID">
-    <button style="width: 100%; padding: 12px; background: linear-gradient(90deg, #ffd700, #ff9800); border: none; border-radius: 8px; font-weight: bold; color: #000; cursor: pointer;" onclick="doWithdraw()">Submit Request</button>
-    <button style="width: 100%; padding: 8px; background: transparent; border: 1px solid #444; border-radius: 8px; color: #aaa; margin-top: 8px; cursor: pointer;" onclick="closeModal('withdrawModal')">Close</button>
+    <button style="width: 100%; padding: 12px; background: linear-gradient(90deg, #ffd700, #ff9800); border: none; border-radius: 8px; font-weight: bold; color: #000;" onclick="doWithdraw()">Submit Request</button>
+    <button style="width: 100%; padding: 8px; background: transparent; border: 1px solid #444; border-radius: 8px; color: #aaa; margin-top: 8px;" onclick="closeModal('withdrawModal')">Close</button>
   </div>
-  </div>
+</div>
 <script>
-  /* 500 Rupees Signup Balance & Auth Management */
   let balance = parseFloat(localStorage.getItem("dmUserBal") || "500.00");
   let currentUser = localStorage.getItem("dmUserPhone");
 
@@ -558,6 +568,31 @@
     location.reload();
   }
 
+  /* Navigation: Home vs WinGo vs Deposit */
+  function openHomeLobby() {
+    document.querySelectorAll('.view-tab').forEach(v => v.classList.remove('active'));
+    document.getElementById('homeView').classList.add('active');
+    setActiveNav('navHome');
+  }
+
+  function openWingoGame() {
+    document.querySelectorAll('.view-tab').forEach(v => v.classList.remove('active'));
+    document.getElementById('wingoView').classList.add('active');
+    setActiveNav('navWingo');
+  }
+
+  function openDepositView() {
+    document.querySelectorAll('.view-tab').forEach(v => v.classList.remove('active'));
+    document.getElementById('depositView').classList.add('active');
+    setActiveNav('navDeposit');
+    updateBalanceAll();
+  }
+
+  function setActiveNav(navId) {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    if (document.getElementById(navId)) document.getElementById(navId).classList.add('active');
+  }
+
   let wingoDuration = 30;
   let wingoTimer = 30;
   let currentPeriod = 202609250001;
@@ -573,25 +608,6 @@
     document.getElementById('depCardBal').innerText = balance.toFixed(2);
   }
   updateBalanceAll();
-
-  function switchMainTab(viewId, btnEl) {
-    document.querySelectorAll('.view-tab').forEach(v => v.classList.remove('active'));
-    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('categoryBar').style.display = 'flex';
-    document.getElementById(viewId).classList.add('active');
-    if (btnEl) btnEl.classList.add('active');
-  }
-
-  function openDepositView() {
-    document.querySelectorAll('.view-tab').forEach(v => v.classList.remove('active'));
-    document.getElementById('categoryBar').style.display = 'none';
-    document.getElementById('depositView').classList.add('active');
-    updateBalanceAll();
-  }
-
-  function closeDepositView() {
-    switchMainTab('wingoView', document.getElementById('btn-cat-wingo'));
-  }
 
   function selectChannel(name, el) {
     currentChannel = name;
@@ -622,10 +638,10 @@
     closeModal('payQrModal');
     alert(`Success: ₹${amt} deposited!`);
     document.getElementById('payUtrInput').value = '';
-    closeDepositView();
+    openHomeLobby();
   }
 
-  /* Interactive Boom Game Functions */
+  /* Interactive Boom Game */
   let bombIndex = -1;
   let boomGameActive = false;
 
@@ -674,7 +690,7 @@
     }
   }
 
-  /* Timer Loop */
+  /* WinGo Timer */
   setInterval(() => {
     if (wingoTimer <= 0) {
       drawRoundResult();
@@ -771,7 +787,7 @@
       updateBalanceAll();
       activeBets = [];
     } else {
-      if (Math.random() < 0.25) {
+      if (Math.random() < 0.20) {
         showWinPopup((Math.floor(Math.random() * 400) + 150), outcome, outColor, outSize);
       }
     }
@@ -864,5 +880,3 @@
 </script>
 </body>
 </html>
-
-
