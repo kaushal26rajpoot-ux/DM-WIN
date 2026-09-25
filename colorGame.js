@@ -93,3 +93,19 @@ function randomColor(){
 	var b = Math.floor(Math.random()*256);
 	return "rgb(" + r + ", " + g + ", " + b + ")";
 }
+// DM WIN - RGB title effect
+const title = document.getElementById("colorDisplay");
+
+if (title) {
+  let hue = 0;
+
+  setInterval(() => {
+    hue = (hue + 3) % 360;
+    title.style.color = `hsl(${hue}, 100%, 60%)`;
+    title.style.textShadow = `
+      0 0 5px hsl(${hue}, 100%, 60%),
+      0 0 15px hsl(${(hue + 60) % 360}, 100%, 60%),
+      0 0 30px hsl(${(hue + 120) % 360}, 100%, 60%)
+    `;
+  }, 50);
+}
