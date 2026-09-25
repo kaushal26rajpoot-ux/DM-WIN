@@ -1,148 +1,379 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DM WIN - Color Trading</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
-        body { background: #121212; color: #fff; display: flex; justify-content: center; }
-        .app { width: 100%; max-width: 420px; min-height: 100vh; background: #1e1e1e; padding: 15px; }
-        
-        .header { background: #2a2a2a; padding: 15px; border-radius: 10px; margin-bottom: 15px; }
-        .wallet { font-size: 22px; font-weight: bold; color: #ffeb3b; }
-        
-        .timer-box { background: #242424; padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 15px; }
-        .timer { font-size: 32px; font-weight: bold; color: #00e676; margin-top: 5px; }
-        
-        .btn-group { display: flex; gap: 10px; margin-bottom: 15px; }
-        .trade-btn { flex: 1; padding: 15px 0; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; color: #fff; cursor: pointer; }
-        .btn-green { background: #00c853; }
-        .btn-violet { background: #9c27b0; }
-        .btn-red { background: #d50000; }
-        
-        .numbers { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 15px; }
-        .num-btn { background: #333; border: 1px solid #555; color: #fff; padding: 10px 0; border-radius: 5px; font-weight: bold; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>DmFirst - Color Trading Platform</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  body { background: #01140e; color: #fff; display: flex; justify-content: center; }
+  .app { width: 100%; max-width: 430px; min-height: 100vh; background: #031c14; padding-bottom: 75px; position: relative; }
 
-        .history { background: #2a2a2a; padding: 15px; border-radius: 10px; }
-        .history table { width: 100%; text-align: center; font-size: 14px; }
-        .history th, .history td { padding: 6px 0; border-bottom: 1px solid #333; }
-        .dot { height: 12px; width: 12px; border-radius: 50%; display: inline-block; }
-    </style>
+  /* Top Navigation */
+  .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: #021610; }
+  .logo { font-size: 19px; font-weight: bold; color: #e6a23c; }
+
+  /* Wallet Card */
+  .wallet-card { background: linear-gradient(135deg, #072a1e, #0e4f38); border: 1px solid #145940; margin: 12px 16px; border-radius: 12px; padding: 14px 16px; }
+  .balance-val { font-size: 22px; font-weight: bold; color: #f5c443; margin-top: 4px; }
+  .action-btns { display: flex; gap: 10px; margin-top: 12px; }
+  .act-btn { flex: 1; padding: 10px 0; border: none; border-radius: 20px; font-weight: bold; font-size: 13px; cursor: pointer; color: #fff; }
+  .btn-dep { background: #0db668; }
+  .btn-with { background: #1a7551; }
+
+  /* Banner */
+  .banner { background: #0a3d2c; margin: 0 16px 14px; border-radius: 10px; padding: 14px; text-align: center; border: 1px solid #145940; }
+  .banner h3 { color: #f5c443; font-size: 16px; }
+
+  /* Section Titles */
+  .section-title { font-size: 15px; font-weight: bold; margin: 16px 16px 10px; color: #d1e7dd; display: flex; justify-content: space-between; }
+
+  /* Games Grid */
+  .games-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 0 16px; }
+  .game-card { background: #062b1f; border: 1px solid #0f4d37; border-radius: 12px; padding: 16px; text-align: center; cursor: pointer; transition: 0.2s; }
+  .game-card:active { transform: scale(0.97); }
+  .game-icon { font-size: 32px; margin-bottom: 8px; }
+  .game-card h4 { font-size: 14px; color: #fff; }
+  .game-card p { font-size: 11px; color: #82a899; margin-top: 4px; }
+
+  /* View Containers */
+  .view-page { display: none; }
+  .view-page.active { display: block; }
+
+  /* WinGo UI Elements */
+  .modes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 0 16px 12px; }
+  .mode-tab { background: #062b1f; border-radius: 8px; padding: 8px 2px; text-align: center; font-size: 11px; color: #72a390; }
+  .mode-tab.active { background: #0db668; color: #fff; font-weight: bold; }
+
+  .timer-banner { background: #062b1f; margin: 0 16px 14px; border-radius: 12px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; }
+  .timer-digits { display: flex; gap: 4px; font-size: 20px; font-weight: bold; color: #fff; }
+  .digit-box { background: #01140e; padding: 4px 6px; border-radius: 6px; }
+
+  .color-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: 0 16px 14px; }
+  .btn-action { border: none; border-radius: 8px; padding: 12px 0; font-size: 14px; font-weight: bold; color: #fff; cursor: pointer; }
+  .bg-green { background: #0db668; }
+  .bg-violet { background: #9c27b0; }
+  .bg-red { background: #f03e3e; }
+
+  .balls-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; background: #021610; margin: 0 16px 14px; padding: 12px; border-radius: 12px; }
+  .ball { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: bold; margin: auto; cursor: pointer; color: #fff; }
+  .ball-red { background: radial-gradient(circle at 30% 30%, #ff6b6b, #d90429); }
+  .ball-green { background: radial-gradient(circle at 30% 30%, #51cf66, #1b8a3e); }
+  .ball-violet-red { background: linear-gradient(135deg, #9c27b0 50%, #d90429 50%); }
+  .ball-violet-green { background: linear-gradient(135deg, #9c27b0 50%, #1b8a3e 50%); }
+
+  .big-small { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0 16px 14px; }
+  .btn-bs { border: none; padding: 12px; border-radius: 20px; font-size: 15px; font-weight: bold; color: #fff; cursor: pointer; }
+  .btn-big { background: #e67e22; }
+  .btn-small { background: #3498db; }
+
+  /* Modal Popup */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 100; padding: 16px; }
+  .modal-box { background: #062b1f; width: 100%; max-width: 380px; border-radius: 14px; padding: 20px; border: 1px solid #145940; }
+  .modal-box h3 { margin-bottom: 12px; color: #f5c443; text-align: center; font-size: 17px; }
+  
+  /* QR Code Container */
+  .qr-box { background: #fff; padding: 8px; width: 170px; height: 170px; margin: 0 auto 12px; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .qr-box img { width: 100%; height: 100%; object-fit: contain; }
+
+  .upi-text { text-align: center; font-size: 13px; color: #82a899; margin-bottom: 14px; word-break: break-all; }
+  .input-field { width: 100%; padding: 11px; background: #021610; border: 1px solid #145940; border-radius: 6px; color: #fff; margin-bottom: 10px; font-size: 13px; }
+  .submit-btn { width: 100%; padding: 11px; background: #0db668; border: none; border-radius: 6px; color: #fff; font-weight: bold; cursor: pointer; font-size: 14px; }
+  .close-btn { width: 100%; padding: 9px; background: transparent; border: 1px solid #444; border-radius: 6px; color: #aaa; margin-top: 8px; cursor: pointer; }
+
+  /* Bottom Navigation */
+  .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 430px; background: #021610; display: flex; border-top: 1px solid #0f4d37; padding: 8px 0; justify-content: space-around; font-size: 11px; color: #82a899; }
+  .nav-item { text-align: center; cursor: pointer; flex: 1; }
+  .nav-item.active { color: #0db668; font-weight: bold; }
+</style>
 </head>
 <body>
 
 <div class="app">
-    <div class="header">
-        <div>Demo Balance</div>
-        <div class="wallet">₹<span id="balance">1000</span></div>
+  <!-- Top Bar -->
+  <div class="top-nav">
+    <div class="logo">DmFirst</div>
+    <div style="font-size: 12px; color: #82a899;">Demo Server</div>
+  </div>
+
+  <!-- Wallet Header -->
+  <div class="wallet-card">
+    <div style="font-size: 12px; color: #82a899;">Demo Balance</div>
+    <div class="balance-val">₹<span id="balDisplay">1000.00</span></div>
+    <div class="action-btns">
+      <button class="act-btn btn-dep" onclick="openModal('depositModal')">+ Deposit</button>
+      <button class="act-btn btn-with" onclick="openModal('withdrawModal')">Withdraw</button>
+    </div>
+  </div>
+
+  <!-- VIEW 1: HOME PAGE -->
+  <div id="homeView" class="view-page active">
+    <div class="banner">
+      <h3>Welcome to DmFirst</h3>
+      <p style="font-size: 11px; color: #bbb; margin-top: 4px;">Original Color Prediction & Mini Games Engine.</p>
     </div>
 
-    <div class="timer-box">
-        <div>Period: <span id="period">20260925001</span></div>
-        <div class="timer" id="time">00:30</div>
+    <div class="section-title">Lottery & Games</div>
+    <div class="games-grid">
+      <div class="game-card" onclick="switchView('wingoView')">
+        <div class="game-icon">🎯</div>
+        <h4>WinGo 30s</h4>
+        <p>Color Prediction</p>
+      </div>
+      <div class="game-card" onclick="playMiniGame('K3 Lotre')">
+        <div class="game-icon">🎲</div>
+        <h4>K3 Lotre</h4>
+        <p>Dice Guessing</p>
+      </div>
+      <div class="game-card" onclick="playMiniGame('Slots 777')">
+        <div class="game-icon">🎰</div>
+        <h4>Slots Fortune</h4>
+        <p>Spin & Match</p>
+      </div>
+      <div class="game-card" onclick="playMiniGame('5D Lotre')">
+        <div class="game-icon">🎱</div>
+        <h4>5D Lottery</h4>
+        <p>Digit Roll</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW 2: WINGO GAME -->
+  <div id="wingoView" class="view-page">
+    <div style="padding: 10px 16px; display: flex; align-items: center; justify-content: space-between;">
+      <button onclick="switchView('homeView')" style="background: none; border: none; color: #0db668; font-size: 14px; cursor: pointer;">← Lobby</button>
+      <div style="font-size: 13px; font-weight: bold; color: #e6a23c;">WinGo 30s</div>
     </div>
 
-    <div class="btn-group">
-        <button class="trade-btn btn-green" onclick="placeBet('Green')">Green</button>
-        <button class="trade-btn btn-violet" onclick="placeBet('Violet')">Violet</button>
-        <button class="trade-btn btn-red" onclick="placeBet('Red')">Red</button>
+    <div class="modes">
+      <div class="mode-tab active">WinGo<br>30sec</div>
+      <div class="mode-tab">WinGo<br>1 Min</div>
+      <div class="mode-tab">WinGo<br>3 Min</div>
+      <div class="mode-tab">WinGo<br>5 Min</div>
     </div>
 
-    <div class="numbers">
-        <button class="num-btn">0</button>
-        <button class="num-btn">1</button>
-        <button class="num-btn">2</button>
-        <button class="num-btn">3</button>
-        <button class="num-btn">4</button>
-        <button class="num-btn">5</button>
-        <button class="num-btn">6</button>
-        <button class="num-btn">7</button>
-        <button class="num-btn">8</button>
-        <button class="num-btn">9</button>
+    <div class="timer-banner">
+      <div>
+        <div style="font-size: 12px; color: #82a899;">Period</div>
+        <div id="periodDisplay" style="font-size: 14px; font-weight: bold; color: #f5c443;">202609250001</div>
+      </div>
+      <div>
+        <div style="font-size: 11px; color: #82a899; text-align: right; margin-bottom: 2px;">Time Remaining</div>
+        <div class="timer-digits">
+          <div class="digit-box" id="sec1">0</div>
+          <div class="digit-box" id="sec2">0</div>
+          <span>:</span>
+          <div class="digit-box" id="sec3">3</div>
+          <div class="digit-box" id="sec4">0</div>
+        </div>
+      </div>
     </div>
 
-    <div class="history">
-        <h4>Game Record</h4>
-        <table>
-            <thead>
-                <tr>
-                    <th>Period</th>
-                    <th>Number</th>
-                    <th>Result</th>
-                </tr>
-            </thead>
-            <tbody id="historyBody">
-                <!-- Records load here -->
-            </tbody>
-        </table>
+    <div class="color-actions">
+      <button class="btn-action bg-green" onclick="placeTrade('Green')">Green</button>
+      <button class="btn-action bg-violet" onclick="placeTrade('Violet')">Violet</button>
+      <button class="btn-action bg-red" onclick="placeTrade('Red')">Red</button>
     </div>
+
+    <div class="balls-grid">
+      <div class="ball ball-violet-red" onclick="placeTrade('0')">0</div>
+      <div class="ball ball-green" onclick="placeTrade('1')">1</div>
+      <div class="ball ball-red" onclick="placeTrade('2')">2</div>
+      <div class="ball ball-green" onclick="placeTrade('3')">3</div>
+      <div class="ball ball-red" onclick="placeTrade('4')">4</div>
+      <div class="ball ball-violet-green" onclick="placeTrade('5')">5</div>
+      <div class="ball ball-red" onclick="placeTrade('6')">6</div>
+      <div class="ball ball-green" onclick="placeTrade('7')">7</div>
+      <div class="ball ball-red" onclick="placeTrade('8')">8</div>
+      <div class="ball ball-green" onclick="placeTrade('9')">9</div>
+    </div>
+
+    <div class="big-small">
+      <button class="btn-bs btn-big" onclick="placeTrade('Big')">Big</button>
+      <button class="btn-bs btn-small" onclick="placeTrade('Small')">Small</button>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <div class="nav-item active" onclick="switchView('homeView')">🏠<br>Home</div>
+    <div class="nav-item" onclick="switchView('wingoView')">🎮<br>WinGo</div>
+    <div class="nav-item" onclick="openModal('depositModal')">💳<br>Deposit</div>
+    <div class="nav-item" onclick="openModal('withdrawModal')">👤<br>Account</div>
+  </div>
+</div>
+
+<!-- DEPOSIT MODAL (Aapka QR Code) -->
+<div class="modal-overlay" id="depositModal">
+  <div class="modal-box">
+    <h3>Deposit via UPI / QR</h3>
+    <div class="qr-box">
+      <!-- Apni repository me 'qr.jpg' upload kar dijiye -->
+      <img id="qrImg" src="qr.jpg" alt="Scan QR Code" onerror="this.onerror=null; this.src='https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=yourupi@okhdfcbank';">
+    </div>
+    <div class="upi-text">Scan QR Code or Pay to UPI ID:<br><b style="color: #fff;" id="upiText">yourupi@okhdfcbank</b></div>
+    <input type="number" id="depAmount" class="input-field" placeholder="Enter Deposit Amount (₹)">
+    <input type="text" id="depUtr" class="input-field" placeholder="Enter 12-Digit UTR Number">
+    <button class="submit-btn" onclick="submitDeposit()">Submit Deposit</button>
+    <button class="close-btn" onclick="closeModal('depositModal')">Close</button>
+  </div>
+</div>
+
+<!-- WITHDRAWAL MODAL -->
+<div class="modal-overlay" id="withdrawModal">
+  <div class="modal-box">
+    <h3>Withdraw Request</h3>
+    <input type="number" id="withAmount" class="input-field" placeholder="Enter Amount (₹)">
+    <input type="text" id="bankName" class="input-field" placeholder="Bank / Account Holder Name">
+    <input type="text" id="bankAcc" class="input-field" placeholder="Account Number or UPI ID">
+    <input type="text" id="bankIfsc" class="input-field" placeholder="IFSC Code (Optional for UPI)">
+    <button class="submit-btn" onclick="submitWithdraw()">Submit Request</button>
+    <button class="close-btn" onclick="closeModal('withdrawModal')">Close</button>
+  </div>
 </div>
 
 <script>
-    let balance = 1000;
-    let timeLeft = 30;
-    let currentBet = null;
-    let periodCount = 1;
+  let balance = 1000.00;
+  let timeLeft = 30;
+  let period = 202609250001;
+  let activeBet = null;
 
-    function updateTimer() {
-        let sec = timeLeft < 10 ? "0" + timeLeft : timeLeft;
-        document.getElementById("time").innerText = "00:" + sec;
-        
-        if (timeLeft === 0) {
-            drawResult();
-            timeLeft = 30;
-        } else {
-            timeLeft--;
-        }
+  // AAP APNA UPI ID YAHAN LIKH DEIN:
+  const myUpiId = "yourupi@okhdfcbank";
+  document.getElementById("upiText").innerText = myUpiId;
+
+  function updateBalance() {
+    document.getElementById("balDisplay").innerText = balance.toFixed(2);
+  }
+
+  function switchView(viewId) {
+    document.querySelectorAll('.view-page').forEach(v => v.classList.remove('active'));
+    document.getElementById(viewId).classList.add('active');
+  }
+
+  function openModal(id) {
+    document.getElementById(id).style.display = 'flex';
+  }
+
+  function closeModal(id) {
+    document.getElementById(id).style.display = 'none';
+  }
+
+  function submitDeposit() {
+    let amt = parseFloat(document.getElementById("depAmount").value);
+    let utr = document.getElementById("depUtr").value.trim();
+    if (!amt || amt <= 0) {
+      alert("Sahi deposit amount daalein!");
+      return;
     }
-
-    function placeBet(color) {
-        if (timeLeft <= 5) {
-            alert("Iss round ka betting time khatam ho chuka hai!");
-            return;
-        }
-        if (balance < 100) {
-            alert("Balance kam hai!");
-            return;
-        }
-        currentBet = color;
-        balance -= 100;
-        document.getElementById("balance").innerText = balance;
-        alert(color + " par ₹100 ki bet lag gayi!");
+    if (utr.length < 4) {
+      alert("Payment ka 12-digit UTR number daalna zaroori hai!");
+      return;
     }
+    balance += amt;
+    updateBalance();
+    closeModal('depositModal');
+    alert(`Success! ₹${amt} deposit credit ho gaya (UTR: ${utr}).`);
+    document.getElementById("depAmount").value = "";
+    document.getElementById("depUtr").value = "";
+  }
 
-    function drawResult() {
-        const colors = ['Green', 'Red', 'Violet'];
-        const randomNum = Math.floor(Math.random() * 10);
-        let resultColor = randomNum % 2 === 0 ? 'Red' : 'Green';
-        if (randomNum === 0 || randomNum === 5) resultColor = 'Violet';
-
-        if (currentBet) {
-            if (currentBet === resultColor) {
-                balance += 200;
-                alert("Aap Jeet Gaye! Result: " + resultColor);
-            } else {
-                alert("Aap Haar Gaye! Result: " + resultColor);
-            }
-            document.getElementById("balance").innerText = balance;
-            currentBet = null;
-        }
-
-        const tbody = document.getElementById("historyBody");
-        const row = `<tr>
-            <td>${document.getElementById("period").innerText}</td>
-            <td>${randomNum}</td>
-            <td><span class="dot" style="background:${resultColor.toLowerCase()}"></span> ${resultColor}</td>
-        </tr>`;
-        tbody.innerHTML = row + tbody.innerHTML;
-
-        periodCount++;
-        document.getElementById("period").innerText = "202609250" + (periodCount < 10 ? "0" + periodCount : periodCount);
+  function submitWithdraw() {
+    let amt = parseFloat(document.getElementById("withAmount").value);
+    let acc = document.getElementById("bankAcc").value.trim();
+    if (!amt || amt <= 0) {
+      alert("Sahi withdrawal amount daalein!");
+      return;
     }
+    if (amt > balance) {
+      alert("Aapke paas paryapt balance nahi hai!");
+      return;
+    }
+    if (!acc) {
+      alert("Account detail ya UPI ID daalna zaroori hai!");
+      return;
+    }
+    balance -= amt;
+    updateBalance();
+    closeModal('withdrawModal');
+    alert(`Withdrawal request ₹${amt} jama ho gayi! Balance deduct kar diya gaya.`);
+    document.getElementById("withAmount").value = "";
+    document.getElementById("bankAcc").value = "";
+  }
 
-    setInterval(updateTimer, 1000);
+  function playMiniGame(name) {
+    let bet = 50;
+    if (balance < bet) {
+      alert("Balance kam hai!");
+      return;
+    }
+    balance -= bet;
+    let win = Math.random() > 0.5;
+    if (win) {
+      balance += 100;
+      alert(`[${name}] Mubarak ho! Aap ₹50 lagakar ₹100 jeet gaye!`);
+    } else {
+      alert(`[${name}] Hard luck! Aap ₹50 haar gaye.`);
+    }
+    updateBalance();
+  }
+
+  function placeTrade(target) {
+    if (timeLeft <= 5) {
+      alert("Is round ki betting samapt ho chuki hai!");
+      return;
+    }
+    let bet = 20;
+    if (balance < bet) {
+      alert("Balance kam hai!");
+      return;
+    }
+    balance -= bet;
+    updateBalance();
+    activeBet = target;
+    alert(`₹${bet} bet lag gayi target par: ${target}`);
+  }
+
+  function evaluateWingo() {
+    const outcome = Math.floor(Math.random() * 10);
+    let outColor = (outcome % 2 === 0) ? 'Red' : 'Green';
+    if (outcome === 0 || outcome === 5) outColor = 'Violet';
+    let outSize = outcome >= 5 ? 'Big' : 'Small';
+
+    if (activeBet) {
+      let won = false;
+      let winAmt = 0;
+      if (activeBet == outcome) { won = true; winAmt = 20 * 9; }
+      else if (activeBet === outColor) { won = true; winAmt = 20 * 2; }
+      else if (activeBet === outSize) { won = true; winAmt = 20 * 2; }
+
+      if (won) {
+        balance += winAmt;
+        alert(`WinGo Result: ${outcome} (${outColor}, ${outSize})\nAap ₹${winAmt} jeet gaye!`);
+      } else {
+        alert(`WinGo Result: ${outcome} (${outColor}, ${outSize})\nAgli baar koshish karein!`);
+      }
+      updateBalance();
+      activeBet = null;
+    }
+  }
+
+  // Timer Tick
+  setInterval(() => {
+    let s = timeLeft < 10 ? '0' + timeLeft : '' + timeLeft;
+    document.getElementById('sec3').innerText = s[0];
+    document.getElementById('sec4').innerText = s[1];
+
+    if (timeLeft === 0) {
+      evaluateWingo();
+      timeLeft = 30;
+      period++;
+      document.getElementById('periodDisplay').innerText = period;
+    } else {
+      timeLeft--;
+    }
+  }, 1000);
 </script>
-
 </body>
 </html>
+
